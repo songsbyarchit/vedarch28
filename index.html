@@ -409,6 +409,34 @@
       border-color: var(--gold);
     }
     .form-row textarea { resize: vertical; min-height: 90px; }
+    .stepper { display: flex; align-items: center; gap: 16px; }
+    .stepper-btn {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      border: 1px solid var(--gold-faint);
+      background: rgba(223,178,120,.03);
+      color: var(--gold);
+      font: 400 18px/1 var(--sans);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s ease, color .2s ease, opacity .2s ease;
+    }
+    .stepper-btn:hover:not(:disabled) { background: var(--gold); color: var(--navy); }
+    .stepper-btn:disabled { opacity: .35; cursor: not-allowed; }
+    .stepper input[type="number"] {
+      width: 56px;
+      flex-shrink: 0;
+      text-align: center;
+      -moz-appearance: textfield;
+    }
+    .stepper input[type="number"]::-webkit-inner-spin-button,
+    .stepper input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
     .checkbox-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -623,7 +651,11 @@
 
           <div class="form-row">
             <label for="guestCount">Number of family members attending (including yourself)</label>
-            <input type="number" id="guestCount" name="guestCount" min="1" value="1" required />
+            <div class="stepper">
+              <button type="button" class="stepper-btn" id="guestCountMinus" aria-label="Decrease">&minus;</button>
+              <input type="number" id="guestCount" name="guestCount" min="1" max="6" value="1" required readonly />
+              <button type="button" class="stepper-btn" id="guestCountPlus" aria-label="Increase">+</button>
+            </div>
           </div>
 
           <div class="form-row">
@@ -869,6 +901,26 @@
     }
     loadGuestNames();
 
+    const guestCountInput = document.getElementById('guestCount');
+    const guestCountMinus = document.getElementById('guestCountMinus');
+    const guestCountPlus = document.getElementById('guestCountPlus');
+    const GUEST_COUNT_MAX = 6;
+
+    function updateGuestCountButtons() {
+      const val = parseInt(guestCountInput.value, 10);
+      guestCountMinus.disabled = val <= 1;
+      guestCountPlus.disabled = val >= GUEST_COUNT_MAX;
+    }
+    guestCountMinus.addEventListener('click', () => {
+      guestCountInput.value = Math.max(1, parseInt(guestCountInput.value, 10) - 1);
+      updateGuestCountButtons();
+    });
+    guestCountPlus.addEventListener('click', () => {
+      guestCountInput.value = Math.min(GUEST_COUNT_MAX, parseInt(guestCountInput.value, 10) + 1);
+      updateGuestCountButtons();
+    });
+    updateGuestCountButtons();
+
     rsvpForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -900,8 +952,8 @@
         rsvpStatus.textContent = 'Please add a contact number.';
         return;
       }
-      if (!/^(\+44|0)/.test(contact.replace(/[\s()-]/g, ''))) {
-        rsvpStatus.textContent = 'Please enter your contact number starting with +44 or 0.';
+      if (!/^(?:\+44\d{9,10}|0\d{9,10})$/.test(contact.replace(/[\s()-]/g, ''))) {
+        rsvpStatus.textContent = 'Please enter a valid UK number, e.g. 07925 218447 or +44 7925 218447.';
         return;
       }
       if (!email) {
