@@ -438,6 +438,34 @@
       -webkit-appearance: none;
       margin: 0;
     }
+    .family-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .family-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px 8px 14px;
+      border: 1px solid var(--gold-faint);
+      background: rgba(223,178,120,.03);
+      color: var(--gold);
+      font-size: 12px;
+      letter-spacing: .04em;
+    }
+    .family-chip button {
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--gold-faint);
+      background: transparent;
+      color: var(--gold);
+      font-size: 11px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background .2s ease, color .2s ease;
+    }
+    .family-chip button:hover { background: var(--gold); color: var(--navy); }
+    .family-chip.removed { opacity: .4; text-decoration: line-through; }
     .checkbox-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -692,6 +720,12 @@
             </div>
           </div>
 
+          <div class="form-row" id="familyChecklistRow" style="display:none;">
+            <label>Who's coming?</label>
+            <p class="section-copy" style="margin:0 0 8px; text-align:left; font-size:12px;">Everyone in your family/group is included by default — remove anyone who isn't coming.</p>
+            <div class="family-chips" id="familyChips"></div>
+          </div>
+
           <div class="form-row">
             <label for="address">Your current address</label>
             <textarea id="address" name="address" placeholder="So we can send you a physical invitation card" required></textarea>
@@ -908,14 +942,23 @@
 
     willAttendSelect.addEventListener('change', () => {
       const attending = willAttendSelect.value === 'Yes';
-      guestCountRow.style.display = attending ? 'grid' : 'none';
+      const selectedOption = guestNameSelect.options[guestNameSelect.selectedIndex];
+      const members = selectedOption && selectedOption.dataset.members ? JSON.parse(selectedOption.dataset.members) : [];
+      const isGroup = members.length > 1;
+      guestCountRow.style.display = (attending && !isGroup) ? 'grid' : 'none';
+      familyChecklistRow.style.display = (attending && isGroup) ? 'grid' : 'none';
       arrivalDateRow.style.display = attending ? 'grid' : 'none';
       arrivalDateSelect.required = attending;
     });
 
     // Loads the guest list via JSONP (avoids CORS issues with Apps Script GET requests).
-    // Each entry is {name, section, row} - the row number is what we actually submit,
-    // so duplicate names (e.g. two "Nani"s in different families) can't get mixed up.
+    // Each entry is {name, section, row, members} - members has every person in that
+    // guest's family/couple group (just the one guest themselves if solo), so picking a
+    // family shows a "who's coming" checklist instead of a blind headcount.
+    const familyChecklistRow = document.getElementById('familyChecklistRow');
+    const familyChips = document.getElementById('familyChips');
+    let currentMembers = [];
+
     window.populateGuestNames = function (guests) {
       guestNameSelect.innerHTML = '<option value="" disabled selected>Select your name</option>';
       const nameCounts = {};
@@ -927,10 +970,38 @@
         const opt = document.createElement('option');
         opt.value = g.row;
         opt.dataset.name = g.name;
-        opt.textContent = (nameCounts[g.name] > 1 && g.section) ? `${g.name} (${g.section})` : g.name;
+        opt.dataset.members = JSON.stringify(g.members || [{ name: g.name, row: g.row }]);
+        const isGroup = (g.members || []).length > 1;
+        const label = (nameCounts[g.name] > 1 && g.section) ? `${g.name} (${g.section})` : g.name;
+        opt.textContent = isGroup ? `${label} + family` : label;
         guestNameSelect.appendChild(opt);
       });
     };
+
+    function renderFamilyChips(members) {
+      currentMembers = members.map(m => ({ ...m, included: true }));
+      familyChips.innerHTML = '';
+      currentMembers.forEach((m, idx) => {
+        const chip = document.createElement('span');
+        chip.className = 'family-chip';
+        chip.innerHTML = `<span class="chip-label">${m.name}</span> <button type="button" aria-label="Remove ${m.name}">&times;</button>`;
+        chip.querySelector('button').addEventListener('click', () => {
+          currentMembers[idx].included = !currentMembers[idx].included;
+          chip.classList.toggle('removed', !currentMembers[idx].included);
+          chip.querySelector('button').innerHTML = currentMembers[idx].included ? '&times;' : '&#43;';
+        });
+        familyChips.appendChild(chip);
+      });
+    }
+
+    guestNameSelect.addEventListener('change', () => {
+      const selectedOption = guestNameSelect.options[guestNameSelect.selectedIndex];
+      const members = selectedOption && selectedOption.dataset.members ? JSON.parse(selectedOption.dataset.members) : [];
+      const isGroup = members.length > 1;
+      familyChecklistRow.style.display = isGroup ? 'grid' : 'none';
+      guestCountRow.style.display = isGroup ? 'none' : (willAttendSelect.value === 'Yes' ? 'grid' : 'none');
+      if (isGroup) renderFamilyChips(members);
+    });
 
     function loadGuestNames() {
       if (GOOGLE_SCRIPT_URL.startsWith('PASTE_')) {
@@ -973,10 +1044,13 @@
 
       const usingFallback = nameFallbackToggle.checked;
       const selectedOption = guestNameSelect.options[guestNameSelect.selectedIndex];
+      const selectedMembers = (!usingFallback && selectedOption && selectedOption.dataset.members) ? JSON.parse(selectedOption.dataset.members) : [];
+      const isGroup = selectedMembers.length > 1;
       const name = usingFallback ? guestNameFallback.value.trim() : (selectedOption ? selectedOption.dataset.name : '');
-      const row = usingFallback ? null : (guestNameSelect.value || null);
+      const row = (usingFallback || isGroup) ? null : (guestNameSelect.value || null);
+      const attendingRows = isGroup ? currentMembers.filter(m => m.included).map(m => m.row) : null;
       const willAttend = willAttendSelect.value;
-      const guestCount = document.getElementById('guestCount').value;
+      const guestCount = isGroup ? (attendingRows ? attendingRows.length : 0) : document.getElementById('guestCount').value;
       const address = document.getElementById('address').value.trim();
       const arrivalDate = document.getElementById('arrivalDate').value;
       const contact = document.getElementById('contact').value.trim();
@@ -990,6 +1064,10 @@
       }
       if (!willAttend) {
         rsvpStatus.textContent = 'Please let us know if you\'ll be attending.';
+        return;
+      }
+      if (isGroup && willAttend === 'Yes' && attendingRows.length === 0) {
+        rsvpStatus.textContent = 'Please keep at least one person checked, or select "No" above if none of you are coming.';
         return;
       }
       if (!address) {
@@ -1016,6 +1094,7 @@
       const payload = {
         name: name,
         row: row,
+        rows: attendingRows,
         rsvp: willAttend,
         guests: guestCount,
         address: address,
