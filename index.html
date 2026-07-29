@@ -957,10 +957,9 @@
     const willAttendYesOpt = document.getElementById('willAttendYesOpt');
     const willAttendNoOpt = document.getElementById('willAttendNoOpt');
 
-    // Shared by both the name select and the attending select. The family checklist
-    // shows as soon as a group name is picked, but disappears again if they say "No" -
-    // no point showing who's coming when nobody in the group is. Guest count / arrival
-    // date still wait on "Yes" since those only matter if coming.
+    // Shared by both the name select and the attending select. Family checklist only
+    // shows once "Yes" is confirmed - same as the solo guest-count stepper - since
+    // asking "who's coming" before "are you coming at all" is answered is premature.
     function updateAttendanceFieldsVisibility() {
       const willAttend = willAttendSelect.value;
       const attending = willAttend === 'Yes';
@@ -972,10 +971,10 @@
       willAttendNoOpt.textContent = isGroup ? "No, we can't make it" : "No, I can't make it";
 
       guestCountRow.style.display = (attending && !isGroup) ? 'grid' : 'none';
-      familyChecklistRow.style.display = (isGroup && willAttend !== 'No') ? 'grid' : 'none';
+      familyChecklistRow.style.display = (attending && isGroup) ? 'grid' : 'none';
       arrivalDateRow.style.display = attending ? 'grid' : 'none';
       arrivalDateSelect.required = attending;
-      if (isGroup && willAttend !== 'No') renderFamilyChips(members);
+      if (attending && isGroup) renderFamilyChips(members);
     }
 
     willAttendSelect.addEventListener('change', updateAttendanceFieldsVisibility);
