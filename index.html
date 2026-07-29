@@ -677,7 +677,7 @@
 
           <div class="form-row">
             <label for="arrivalDate">Arrival date in Chandigarh</label>
-            <select id="arrivalDate" name="arrivalDate">
+            <select id="arrivalDate" name="arrivalDate" required>
               <option value="" disabled selected>Select arrival date</option>
               <option value="Before Thursday 25th March">Before Thursday 25th March</option>
               <option value="Thursday 25th March">Thursday 25th March</option>
@@ -689,7 +689,7 @@
           <div class="form-row">
             <label for="contact">Contact number</label>
             <p class="section-copy" style="margin:0 0 8px; text-align:left; font-size:12px;">Ideally on WhatsApp, so we can reach you internationally.</p>
-            <input type="text" id="contact" name="contact" placeholder="For last-minute logistics" autocomplete="tel" />
+            <input type="text" id="contact" name="contact" placeholder="For last-minute logistics" autocomplete="tel" required />
           </div>
 
           <div class="form-row">
@@ -963,12 +963,20 @@
         rsvpStatus.textContent = 'Please add an address so we can send your card.';
         return;
       }
-      if (!email) {
-        rsvpStatus.textContent = 'Please add an email so we can send your calendar invites.';
+      if (!arrivalDate) {
+        rsvpStatus.textContent = 'Please select your arrival date.';
         return;
       }
-      if (contact && !/^(\+44|0)/.test(contact.replace(/[\s()-]/g, ''))) {
+      if (!contact) {
+        rsvpStatus.textContent = 'Please add a contact number.';
+        return;
+      }
+      if (!/^(\+44|0)/.test(contact.replace(/[\s()-]/g, ''))) {
         rsvpStatus.textContent = 'Please enter your contact number starting with +44 or 0.';
+        return;
+      }
+      if (!email) {
+        rsvpStatus.textContent = 'Please add an email so we can send your calendar invites.';
         return;
       }
 
