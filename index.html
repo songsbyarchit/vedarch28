@@ -192,6 +192,19 @@
     }
     .button:hover { background: var(--gold); color: var(--navy); transform: translateY(-1px); }
     .button.secondary { border-color: var(--gold-faint); }
+    .button.primary {
+      background: var(--gold);
+      color: var(--navy);
+      animation: rsvpPulse 2.6s ease-in-out infinite;
+    }
+    .button.primary:hover { background: transparent; color: var(--gold); animation-play-state: paused; }
+    @keyframes rsvpPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(223, 178, 120, .5); }
+      50% { box-shadow: 0 0 0 12px rgba(223, 178, 120, 0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .button.primary { animation: none; }
+    }
     .button:disabled { opacity: .5; cursor: not-allowed; }
 
     .text-link {
@@ -338,6 +351,43 @@
     }
     .rsvp-panel .rsvp-intro { text-align: center; max-width: 640px; margin: 0 auto 48px; }
     .rsvp-panel h2 { text-align: center; }
+
+    .rsvp-back {
+      display: inline-block;
+      margin-bottom: 28px;
+      color: var(--gold);
+      opacity: .75;
+      font: 400 10px/1 var(--sans);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: opacity .2s ease;
+    }
+    .rsvp-back:hover { opacity: 1; }
+
+    /* RSVP full-screen takeover: hides the rest of the site so RSVP reads as its own page. */
+    body.rsvp-open .site-header,
+    body.rsvp-open .hero,
+    body.rsvp-open .countdown-wrap,
+    body.rsvp-open #festivities,
+    body.rsvp-open #details,
+    body.rsvp-open footer,
+    body.rsvp-open .mobile-nav,
+    body.rsvp-open .rsvp-fab {
+      display: none;
+    }
+    body.rsvp-open #rsvp { padding-top: clamp(56px, 8vw, 96px); }
+
+    /* Keep autofilled fields on-theme instead of the browser's default yellow/white fill. */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    select:-webkit-autofill {
+      -webkit-text-fill-color: var(--gold);
+      -webkit-box-shadow: 0 0 0 1000px rgba(223, 178, 120, .03) inset;
+      box-shadow: 0 0 0 1000px rgba(223, 178, 120, .03) inset;
+      transition: background-color 9999s ease-in-out 0s;
+    }
 
     .rsvp-form { max-width: 640px; margin: 0 auto; display: grid; gap: 26px; }
     .form-row { display: grid; gap: 10px; }
@@ -516,6 +566,7 @@
             <span>Chandigarh, India</span>
           </div>
           <div class="hero-actions">
+            <a class="button primary" href="#rsvp">RSVP</a>
             <a class="button" href="#festivities">View festivities</a>
             <button class="text-link" id="calendarButton" type="button">Add to calendar</button>
           </div>
@@ -590,6 +641,7 @@
     </section>
 
     <section class="section" id="rsvp">
+      <a href="#home" class="rsvp-back" id="rsvpBack">← Back to site</a>
       <div class="rsvp-panel reveal">
         <div class="rsvp-intro">
           <p class="section-kicker">Kindly respond</p>
@@ -624,10 +676,10 @@
             <label for="arrivalDate">Arrival date in Chandigarh</label>
             <select id="arrivalDate" name="arrivalDate">
               <option value="" disabled selected>Select arrival date</option>
-              <option value="Before Thursday, 25th March">Before Thursday, 25th March</option>
-              <option value="Thursday, 25th March">Thursday, 25th March</option>
-              <option value="Friday, 26th March">Friday, 26th March</option>
-              <option value="Saturday, 27th March">Saturday, 27th March</option>
+              <option value="Before Thursday 25th March">Before Thursday 25th March</option>
+              <option value="Thursday 25th March">Thursday 25th March</option>
+              <option value="Friday 26th March">Friday 26th March</option>
+              <option value="Saturday 27th March">Saturday 27th March</option>
             </select>
           </div>
 
@@ -643,13 +695,13 @@
           </div>
 
           <div class="form-row">
-            <label for="dietary">Dietary requirements or allergies</label>
+            <label for="dietary">Dietary requirements or allergies (Optional)</label>
             <p class="section-copy" style="margin:0 0 8px; text-align:left; font-size:12px;">All food served across the festivities will be vegetarian, and no alcohol will be served. Please let us know below about any allergies or other preferences.</p>
             <textarea id="dietary" name="dietary" placeholder="e.g. nut allergy, no dairy, no onion/garlic"></textarea>
           </div>
 
           <div class="form-row">
-            <label for="notes">Song requests or notes for us</label>
+            <label for="notes">Song requests or notes for us (Optional)</label>
             <textarea id="notes" name="notes" placeholder="Anything you'd like us to know"></textarea>
           </div>
 
@@ -677,6 +729,69 @@
   <a class="rsvp-fab" id="rsvpFab" href="#rsvp">RSVP</a>
 
   <script>
+    // Gold/blue particle burst shown on a successful RSVP. Pure canvas, no libraries.
+    function launchFireworks() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const canvas = document.createElement('canvas');
+      canvas.style.cssText = 'position:fixed;inset:0;z-index:200;pointer-events:none;';
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      document.body.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+
+      const colors = ['#dfb278', '#f0d9ae', '#7fb3e0', '#a7cbe8'];
+      const bursts = [];
+      const burstCount = 3;
+      for (let i = 0; i < burstCount; i++) {
+        const cx = canvas.width * (0.3 + Math.random() * 0.4);
+        const cy = canvas.height * (0.2 + Math.random() * 0.2);
+        const particles = [];
+        const particleCount = 44;
+        for (let p = 0; p < particleCount; p++) {
+          const angle = (Math.PI * 2 * p) / particleCount + Math.random() * 0.2;
+          const speed = 2 + Math.random() * 3;
+          particles.push({
+            x: cx, y: cy,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            color: colors[Math.floor(Math.random() * colors.length)]
+          });
+        }
+        bursts.push({ particles, delay: i * 220 });
+      }
+
+      const duration = 1400;
+      const start = performance.now();
+      function frame(now) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+        bursts.forEach(burst => {
+          const t = now - start - burst.delay;
+          if (t < 0) { alive = true; return; }
+          const life = 1 - t / duration;
+          if (life <= 0) return;
+          alive = true;
+          burst.particles.forEach(p => {
+            const x = p.x + p.vx * (t / 16);
+            const y = p.y + p.vy * (t / 16) + 0.02 * (t * t) / 16;
+            ctx.globalAlpha = Math.max(life, 0);
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(x, y, 2.4, 0, Math.PI * 2);
+            ctx.fill();
+          });
+        });
+        ctx.globalAlpha = 1;
+        if (alive) {
+          requestAnimationFrame(frame);
+        } else {
+          canvas.remove();
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+
     const header = document.getElementById('header');
     const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 20);
     onScroll();
@@ -696,6 +811,32 @@
       inRsvpSection = entry.isIntersecting;
       updateFabVisibility();
     }, { threshold: 0.15 }).observe(rsvpSection);
+
+    // RSVP full-screen takeover: any link to #rsvp opens it as its own "page";
+    // "Back to site" restores the scroll position the visitor came from.
+    let preTakeoverScrollY = 0;
+    function openRsvpTakeover() {
+      preTakeoverScrollY = window.scrollY;
+      document.body.classList.add('rsvp-open');
+      window.scrollTo(0, 0);
+      history.replaceState(null, '', '#rsvp');
+    }
+    function closeRsvpTakeover() {
+      document.body.classList.remove('rsvp-open');
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+      window.scrollTo(0, preTakeoverScrollY);
+    }
+    document.querySelectorAll('a[href="#rsvp"]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        openRsvpTakeover();
+      });
+    });
+    document.getElementById('rsvpBack').addEventListener('click', (e) => {
+      e.preventDefault();
+      closeRsvpTakeover();
+    });
+    if (window.location.hash === '#rsvp') openRsvpTakeover();
 
     const target = new Date('2027-03-28T19:00:00+05:30').getTime();
     const updateCountdown = () => {
@@ -822,6 +963,10 @@
         rsvpStatus.textContent = 'Please add an email so we can send your calendar invites.';
         return;
       }
+      if (contact && !/^(\+44|0)/.test(contact.replace(/[\s()-]/g, ''))) {
+        rsvpStatus.textContent = 'Please enter your contact number starting with +44 or 0.';
+        return;
+      }
 
       const payload = {
         name: name,
@@ -856,6 +1001,7 @@
         });
         // no-cors means we can't read the response, so we treat the request as sent.
         rsvpStatus.textContent = 'Thank you, your RSVP has been recorded.';
+        launchFireworks();
         rsvpForm.reset();
         guestNameFallback.style.display = 'none';
         loadGuestNames();
