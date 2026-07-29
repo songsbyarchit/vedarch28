@@ -465,7 +465,20 @@
       transition: background .2s ease, color .2s ease;
     }
     .family-chip button:hover { background: var(--gold); color: var(--navy); }
-    .family-chip.removed { opacity: .4; text-decoration: line-through; }
+    .family-chip.removed .chip-label { opacity: .45; text-decoration: line-through; }
+    .family-chip.removed button {
+      background: var(--gold);
+      color: var(--navy);
+      border-color: var(--gold);
+      animation: chipGlow 1.8s ease-in-out infinite;
+    }
+    @keyframes chipGlow {
+      0%, 100% { box-shadow: 0 0 0 2px rgba(223, 178, 120, .18), 0 0 6px rgba(223, 178, 120, .45); }
+      50% { box-shadow: 0 0 0 4px rgba(223, 178, 120, .32), 0 0 14px rgba(223, 178, 120, .85); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .family-chip.removed button { animation: none; box-shadow: 0 0 8px rgba(223, 178, 120, .6); }
+    }
     .checkbox-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -686,6 +699,7 @@
           <h2>RSVP</h2>
           <p class="section-copy">Select your name below and fill in a few details. It updates our guest list directly, so there's nothing further to send.</p>
           <p class="section-copy">Prefer to talk, or have anything else you'd rather discuss privately? Call or message us directly - Vedika on +44 7565 804116, or Archit on +44 7925 218447.</p>
+          <p class="section-copy">We're happy to help with recommendations for flights and transport to the venue - do get in touch if that would be useful.</p>
         </div>
 
         <form class="rsvp-form" id="rsvpForm">
@@ -1049,6 +1063,7 @@
       const name = usingFallback ? guestNameFallback.value.trim() : (selectedOption ? selectedOption.dataset.name : '');
       const row = (usingFallback || isGroup) ? null : (guestNameSelect.value || null);
       const attendingRows = isGroup ? currentMembers.filter(m => m.included).map(m => m.row) : null;
+      const notAttendingRows = isGroup ? currentMembers.filter(m => !m.included).map(m => m.row) : null;
       const willAttend = willAttendSelect.value;
       const guestCount = isGroup ? (attendingRows ? attendingRows.length : 0) : document.getElementById('guestCount').value;
       const address = document.getElementById('address').value.trim();
@@ -1095,6 +1110,7 @@
         name: name,
         row: row,
         rows: attendingRows,
+        notAttendingRows: notAttendingRows,
         rsvp: willAttend,
         guests: guestCount,
         address: address,
