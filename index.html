@@ -8,7 +8,7 @@
   <title>Vedika & Archit - Wedding Festivities</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Playfair+Display:wght@400;500&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --navy: rgb(0, 9, 22);
@@ -145,11 +145,11 @@
     }
     h1 {
       margin: 0;
-      font-family: var(--serif);
-      font-size: clamp(40px, 9vw, 88px);
+      font-family: 'Cormorant Garamond', var(--serif);
+      font-size: clamp(42px, 9.5vw, 92px);
       line-height: .88;
       letter-spacing: .13em;
-      font-weight: 400;
+      font-weight: 300;
       text-transform: uppercase;
       text-shadow: 0 0 30px rgba(223, 178, 120, .08);
     }
@@ -233,7 +233,7 @@
       .rsvp-fab { right: 16px; bottom: 88px; }
     }
 
-    .shell-mark { width: 110px; margin: 55px auto 0; }
+    .shell-mark { width: 150px; margin: 55px auto 0; }
 
     .section-heading { text-align: center; margin: 0 auto 56px; max-width: 720px; }
     .section-kicker {
@@ -697,9 +697,9 @@
             <textarea id="address" name="address" placeholder="So we can send you a physical invitation card" required></textarea>
           </div>
 
-          <div class="form-row">
+          <div class="form-row" id="arrivalDateRow">
             <label for="arrivalDate">Arrival date in Chandigarh</label>
-            <select id="arrivalDate" name="arrivalDate" required>
+            <select id="arrivalDate" name="arrivalDate">
               <option value="" disabled selected>Select arrival date</option>
               <option value="Before Thursday 25th March">Before Thursday 25th March</option>
               <option value="Thursday 25th March">Thursday 25th March</option>
@@ -900,6 +900,19 @@
       if (useFallback) guestNameFallback.focus();
     });
 
+    // Guest count / arrival date only matter if the guest is actually attending.
+    const willAttendSelect = document.getElementById('willAttend');
+    const guestCountRow = document.getElementById('guestCountRow');
+    const arrivalDateRow = document.getElementById('arrivalDateRow');
+    const arrivalDateSelect = document.getElementById('arrivalDate');
+
+    willAttendSelect.addEventListener('change', () => {
+      const attending = willAttendSelect.value === 'Yes';
+      guestCountRow.style.display = attending ? 'grid' : 'none';
+      arrivalDateRow.style.display = attending ? 'grid' : 'none';
+      arrivalDateSelect.required = attending;
+    });
+
     // Loads the guest list via JSONP (avoids CORS issues with Apps Script GET requests).
     // Each entry is {name, section, row} - the row number is what we actually submit,
     // so duplicate names (e.g. two "Nani"s in different families) can't get mixed up.
@@ -962,6 +975,7 @@
       const selectedOption = guestNameSelect.options[guestNameSelect.selectedIndex];
       const name = usingFallback ? guestNameFallback.value.trim() : (selectedOption ? selectedOption.dataset.name : '');
       const row = usingFallback ? null : (guestNameSelect.value || null);
+      const willAttend = willAttendSelect.value;
       const guestCount = document.getElementById('guestCount').value;
       const address = document.getElementById('address').value.trim();
       const arrivalDate = document.getElementById('arrivalDate').value;
@@ -974,11 +988,15 @@
         rsvpStatus.textContent = 'Please select or enter your name.';
         return;
       }
+      if (!willAttend) {
+        rsvpStatus.textContent = 'Please let us know if you\'ll be attending.';
+        return;
+      }
       if (!address) {
         rsvpStatus.textContent = 'Please add an address so we can send your card.';
         return;
       }
-      if (!arrivalDate) {
+      if (willAttend === 'Yes' && !arrivalDate) {
         rsvpStatus.textContent = 'Please select your arrival date.';
         return;
       }
@@ -998,6 +1016,7 @@
       const payload = {
         name: name,
         row: row,
+        rsvp: willAttend,
         guests: guestCount,
         address: address,
         arrivalDate: arrivalDate,
