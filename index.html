@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#000916" />
+  <meta name="description" content="Vedika and Archit — wedding festivities, 26–28 March 2027, Chandigarh, India." />
+  <title>Vedika & Archit — Wedding Festivities</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: rgb(0, 9, 22);
+      --navy-deep: rgb(0, 5, 13);
+      --gold: rgb(223, 178, 120);
+      --gold-soft: rgba(223, 178, 120, 0.72);
+      --gold-faint: rgba(223, 178, 120, 0.18);
+      --serif: "Bodoni Moda", Didot, "Bodoni 72", "Bodoni MT", Baskerville, "Times New Roman", serif;
+      --sans: Montserrat, "Avenir Next", Avenir, "Helvetica Neue", Arial, sans-serif;
+      --page: min(1120px, calc(100vw - 32px));
+      --radius: 2px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--navy); }
+    body {
+      margin: 0;
+      color: var(--gold);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(16, 48, 82, .11), transparent 34%),
+        radial-gradient(circle at 82% 28%, rgba(10, 38, 68, .09), transparent 30%),
+        linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+      font-family: var(--sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99;
+      opacity: .12;
+      mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.24'/%3E%3C/svg%3E");
+    }
+
+    a { color: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 30;
+      border-bottom: 1px solid transparent;
+      transition: background .3s ease, border-color .3s ease, backdrop-filter .3s ease;
+    }
+    .site-header.scrolled {
+      background: rgba(0, 9, 22, .88);
+      border-color: var(--gold-faint);
+      backdrop-filter: blur(16px);
+    }
+    .header-inner {
+      width: var(--page);
+      height: 72px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .monogram {
+      font-family: var(--serif);
+      font-size: 28px;
+      text-decoration: none;
+      letter-spacing: .08em;
+      line-height: 1;
+    }
+    .desktop-nav { display: flex; align-items: center; gap: 30px; }
+    .desktop-nav a {
+      text-decoration: none;
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      opacity: .82;
+      transition: opacity .2s ease;
+    }
+    .desktop-nav a:hover { opacity: 1; }
+
+    .section {
+      position: relative;
+      width: var(--page);
+      margin: 0 auto;
+      padding: 104px 0;
+    }
+
+    .hero {
+      min-height: 100svh;
+      width: 100%;
+      display: grid;
+      place-items: center;
+      padding: 96px 20px 52px;
+      position: relative;
+      isolation: isolate;
+    }
+    .hero-frame {
+      width: min(920px, 100%);
+      min-height: calc(100svh - 120px);
+      border: 1px solid var(--gold);
+      position: relative;
+      display: grid;
+      place-items: center;
+      padding: clamp(76px, 10vw, 112px) clamp(24px, 7vw, 76px) clamp(54px, 8vw, 80px);
+      background: rgba(0, 9, 22, .44);
+      box-shadow: inset 0 0 80px rgba(0, 0, 0, .17), 0 30px 80px rgba(0, 0, 0, .2);
+    }
+    .hero-inner { text-align: center; width: 100%; position: relative; z-index: 2; }
+    .eyebrow {
+      margin: 0;
+      font-size: clamp(13px, 2vw, 20px);
+      line-height: 1.4;
+      letter-spacing: .36em;
+      text-transform: uppercase;
+      font-weight: 300;
+    }
+    .rule {
+      width: min(410px, 72%);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold) 16%, var(--gold) 84%, transparent);
+      margin: 34px auto 38px;
+      position: relative;
+    }
+    .rule::after {
+      content: "";
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border: 4px solid var(--navy);
+      background: var(--gold);
+      border-radius: 50%;
+      left: 50%; top: 50%; transform: translate(-50%, -50%);
+    }
+    h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(64px, 15vw, 144px);
+      line-height: .8;
+      letter-spacing: .04em;
+      font-weight: 400;
+      text-transform: uppercase;
+      text-shadow: 0 0 30px rgba(223, 178, 120, .08);
+    }
+    h1 .amp {
+      display: block;
+      font-size: .55em;
+      line-height: 1.25;
+      margin: .12em 0 .03em;
+    }
+    .hero-meta {
+      margin-top: 78px;
+      display: grid;
+      justify-items: center;
+      gap: 18px;
+    }
+    .hero-meta time, .hero-meta span {
+      font-size: clamp(13px, 2.2vw, 18px);
+      letter-spacing: .34em;
+      text-transform: uppercase;
+    }
+    .hero-meta .dot { width: 7px; height: 7px; background: var(--gold); border-radius: 50%; }
+    .hero-actions { margin-top: 44px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+    .button {
+      min-height: 48px;
+      padding: 14px 22px;
+      border: 1px solid var(--gold);
+      background: transparent;
+      color: var(--gold);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font: 400 10px/1 var(--sans);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease, transform .2s ease;
+    }
+    .button:hover { background: var(--gold); color: var(--navy); transform: translateY(-1px); }
+    .button.secondary { border-color: var(--gold-faint); }
+    .button:disabled { opacity: .5; cursor: not-allowed; }
+
+    .ornament { position: absolute; pointer-events: none; color: var(--gold); }
+    .ornament svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .ornament.top-left { width: clamp(140px, 24vw, 250px); height: 250px; top: 10px; left: 10px; }
+    .ornament.top-right { width: clamp(140px, 24vw, 250px); height: 250px; top: 10px; right: 10px; transform: scaleX(-1); }
+    .ornament.bottom-left { width: clamp(120px, 20vw, 215px); height: 215px; bottom: 8px; left: 8px; transform: scaleY(-1); }
+    .ornament.bottom-right { width: clamp(120px, 20vw, 215px); height: 215px; bottom: 8px; right: 8px; transform: scale(-1); }
+    .shell-mark { width: 110px; margin: 55px auto 0; }
+
+    .section-heading { text-align: center; margin: 0 auto 56px; max-width: 720px; }
+    .section-kicker {
+      margin: 0 0 16px;
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      opacity: .75;
+    }
+    h2 {
+      margin: 0;
+      font: 400 clamp(38px, 7vw, 70px)/1.05 var(--serif);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .section-copy {
+      max-width: 640px;
+      margin: 24px auto 0;
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.95;
+      color: rgba(223, 178, 120, .78);
+    }
+
+    .countdown-wrap {
+      margin-top: -30px;
+      position: relative;
+      z-index: 5;
+    }
+    .countdown {
+      width: min(760px, calc(100vw - 32px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--gold-faint);
+      background: rgba(0, 9, 22, .82);
+      backdrop-filter: blur(12px);
+    }
+    .countdown div { text-align: center; padding: 20px 8px; border-right: 1px solid var(--gold-faint); }
+    .countdown div:last-child { border-right: 0; }
+    .countdown strong { display: block; font: 400 clamp(26px, 5vw, 44px)/1 var(--serif); letter-spacing: .05em; }
+    .countdown span { display: block; margin-top: 9px; font-size: 8px; letter-spacing: .2em; text-transform: uppercase; opacity: .66; }
+
+    .events { border-top: 1px solid var(--gold-faint); }
+    .event {
+      display: grid;
+      grid-template-columns: minmax(180px, 1fr) minmax(220px, .8fr) minmax(180px, .7fr);
+      align-items: center;
+      gap: 24px;
+      padding: 30px 2px;
+      border-bottom: 1px solid var(--gold-faint);
+    }
+    .event h3 { margin: 0; font-size: 11px; font-weight: 400; letter-spacing: .18em; text-transform: uppercase; }
+    .event time { font-size: 11px; font-weight: 300; letter-spacing: .14em; line-height: 1.7; text-transform: uppercase; }
+    .event .event-time { text-align: right; font-size: 11px; font-weight: 300; letter-spacing: .14em; text-transform: uppercase; }
+    .event .date-block { border-left: 1px solid var(--gold); padding-left: 28px; }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .info-card {
+      min-height: 350px;
+      border: 1px solid var(--gold-faint);
+      padding: clamp(28px, 5vw, 54px);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: linear-gradient(180deg, rgba(223,178,120,.03), transparent 60%);
+    }
+    .info-card::before {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border: 1px solid var(--gold-faint);
+      border-radius: 50%;
+      top: -130px;
+      right: -100px;
+    }
+    .info-card .number { font: 400 72px/1 var(--serif); opacity: .18; position: absolute; top: 28px; left: 34px; }
+    .info-card h3 { margin: 0 0 14px; font: 400 33px/1.1 var(--serif); letter-spacing: .12em; text-transform: uppercase; }
+    .info-card p { margin: 0; max-width: 470px; font-size: 13px; font-weight: 300; line-height: 1.9; color: rgba(223,178,120,.72); }
+
+    .rsvp-panel {
+      border: 1px solid var(--gold);
+      padding: clamp(34px, 7vw, 76px);
+      position: relative;
+    }
+    .rsvp-panel .rsvp-intro { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+    .rsvp-panel h2 { text-align: center; }
+
+    .rsvp-form { max-width: 640px; margin: 0 auto; display: grid; gap: 26px; }
+    .form-row { display: grid; gap: 10px; }
+    .form-row label {
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      opacity: .82;
+    }
+    .form-row input[type="text"],
+    .form-row input[type="number"],
+    .form-row textarea {
+      width: 100%;
+      background: rgba(223,178,120,.03);
+      border: 1px solid var(--gold-faint);
+      color: var(--gold);
+      font: 300 14px/1.5 var(--sans);
+      padding: 14px 16px;
+      border-radius: 0;
+    }
+    .form-row input:focus, .form-row textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    .form-row textarea { resize: vertical; min-height: 90px; }
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 300;
+      border: 1px solid var(--gold-faint);
+      padding: 12px 14px;
+    }
+    .checkbox-item input { accent-color: var(--gold); width: 16px; height: 16px; }
+    .form-footer { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
+    .form-status { font-size: 11px; letter-spacing: .1em; opacity: .8; min-height: 16px; }
+
+    footer {
+      border-top: 1px solid var(--gold-faint);
+      padding: 48px 20px 98px;
+      text-align: center;
+    }
+    footer .footer-names { font: 400 38px/1 var(--serif); letter-spacing: .12em; }
+    footer p { margin: 14px 0 0; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; opacity: .65; }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      z-index: 40;
+      left: 12px;
+      right: 12px;
+      bottom: calc(12px + env(safe-area-inset-bottom));
+      border: 1px solid var(--gold-faint);
+      background: rgba(0, 9, 22, .94);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+    }
+    .mobile-nav a {
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      text-decoration: none;
+      font-size: 8px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      border-right: 1px solid var(--gold-faint);
+    }
+    .mobile-nav a:last-child { border-right: 0; }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 760px) {
+      :root { --page: calc(100vw - 28px); }
+      .desktop-nav { display: none; }
+      .header-inner { height: 60px; }
+      .mobile-nav { display: grid; grid-template-columns: repeat(4, 1fr); }
+      .hero { padding: 72px 12px 26px; }
+      .hero-frame { min-height: calc(100svh - 88px); padding: 112px 18px 52px; }
+      .ornament.top-left, .ornament.top-right { width: 155px; height: 180px; }
+      .ornament.bottom-left, .ornament.bottom-right { width: 125px; height: 145px; }
+      h1 { font-size: clamp(58px, 18vw, 86px); line-height: .82; }
+      .hero-meta { margin-top: 62px; }
+      .hero-actions { margin-top: 36px; }
+      .button { width: 100%; max-width: 320px; }
+      .countdown-wrap { margin-top: 18px; }
+      .section { padding: 84px 0; }
+      .section-heading { margin-bottom: 42px; }
+      .event { grid-template-columns: 1fr; gap: 12px; padding: 24px 4px; }
+      .event .date-block { border-left: 0; padding-left: 0; }
+      .event .event-time { text-align: left; opacity: .72; }
+      .split { grid-template-columns: 1fr; }
+      .info-card { min-height: 290px; }
+      .checkbox-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 430px) {
+      .hero-frame { padding-top: 124px; }
+      .countdown { grid-template-columns: repeat(2, 1fr); }
+      .countdown div:nth-child(2) { border-right: 0; }
+      .countdown div:nth-child(-n+2) { border-bottom: 1px solid var(--gold-faint); }
+      h2 { letter-spacing: .08em; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" id="header">
+    <div class="header-inner">
+      <a class="monogram" href="#home" aria-label="Vedika and Archit home">V&amp;A</a>
+      <nav class="desktop-nav" aria-label="Primary navigation">
+        <a href="#festivities">Festivities</a>
+        <a href="#details">Details</a>
+        <a href="#rsvp">RSVP</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home" aria-labelledby="hero-title">
+      <div class="hero-frame">
+        <div class="ornament top-left" aria-hidden="true">
+          <svg viewBox="0 0 250 250" fill="none" stroke="currentColor" stroke-width="1.25">
+            <path d="M12 224C47 163 55 94 92 28M23 181c35-16 61-12 81 4-31 17-59 15-81-4ZM47 136c22-29 49-39 80-27-24 26-51 35-80 27ZM70 89c11-32 30-51 58-63-9 34-29 55-58 63ZM88 60c31 3 58-4 83-24-37-8-64 0-83 24Z"/>
+            <path d="M37 175c-8-20-8-39 1-58 15 21 14 40-1 58ZM55 121c-6-19-3-36 10-51 10 22 7 39-10 51Z"/>
+            <circle cx="48" cy="101" r="3"/><circle cx="60" cy="89" r="3"/><circle cx="72" cy="77" r="3"/>
+          </svg>
+        </div>
+        <div class="ornament top-right" aria-hidden="true">
+          <svg viewBox="0 0 250 250" fill="none" stroke="currentColor" stroke-width="1.25">
+            <path d="M12 224C47 163 55 94 92 28M23 181c35-16 61-12 81 4-31 17-59 15-81-4ZM47 136c22-29 49-39 80-27-24 26-51 35-80 27ZM70 89c11-32 30-51 58-63-9 34-29 55-58 63ZM88 60c31 3 58-4 83-24-37-8-64 0-83 24Z"/>
+            <path d="M37 175c-8-20-8-39 1-58 15 21 14 40-1 58ZM55 121c-6-19-3-36 10-51 10 22 7 39-10 51Z"/>
+            <circle cx="48" cy="101" r="3"/><circle cx="60" cy="89" r="3"/><circle cx="72" cy="77" r="3"/>
+          </svg>
+        </div>
+        <div class="ornament bottom-left" aria-hidden="true">
+          <svg viewBox="0 0 250 250" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M12 224C47 163 55 94 92 28M23 181c35-16 61-12 81 4-31 17-59 15-81-4ZM47 136c22-29 49-39 80-27-24 26-51 35-80 27Z"/><circle cx="48" cy="101" r="3"/><circle cx="60" cy="89" r="3"/></svg>
+        </div>
+        <div class="ornament bottom-right" aria-hidden="true">
+          <svg viewBox="0 0 250 250" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M12 224C47 163 55 94 92 28M23 181c35-16 61-12 81 4-31 17-59 15-81-4ZM47 136c22-29 49-39 80-27-24 26-51 35-80 27Z"/><circle cx="48" cy="101" r="3"/><circle cx="60" cy="89" r="3"/></svg>
+        </div>
+
+        <div class="hero-inner">
+          <p class="eyebrow">Save the date</p>
+          <div class="rule"></div>
+          <h1 id="hero-title">Vedika <span class="amp">&amp;</span> Archit</h1>
+          <div class="hero-meta">
+            <time datetime="2027-03-28">28 March 2027</time>
+            <span class="dot" aria-hidden="true"></span>
+            <span>Chandigarh, India</span>
+          </div>
+          <div class="hero-actions">
+            <a class="button" href="#festivities">View festivities</a>
+            <button class="button secondary" id="calendarButton" type="button">Add to calendar</button>
+          </div>
+          <svg class="shell-mark" viewBox="0 0 120 52" fill="none" stroke="currentColor" stroke-width="1.1" aria-hidden="true">
+            <path d="M57 43C39 51 20 43 18 26 16 12 31 2 46 9c10 5 14 16 11 34Z"/><path d="M61 43c18 8 37 0 39-17 2-14-13-24-28-17-10 5-14 16-11 34Z"/><path d="M19 27 54 42M22 18l33 24M30 11l25 31M41 8l14 34M99 27 64 42M96 18 63 42M88 11 63 42M77 8 63 42"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <div class="countdown-wrap reveal" aria-label="Countdown to the wedding">
+      <div class="countdown" id="countdown">
+        <div><strong id="days">—</strong><span>Days</span></div>
+        <div><strong id="hours">—</strong><span>Hours</span></div>
+        <div><strong id="minutes">—</strong><span>Minutes</span></div>
+        <div><strong id="seconds">—</strong><span>Seconds</span></div>
+      </div>
+    </div>
+
+    <section class="section" id="festivities">
+      <div class="section-heading reveal">
+        <p class="section-kicker">The details</p>
+        <h2>Wedding Festivities</h2>
+        <p class="section-copy">Four days of colour, food and celebration in Chandigarh. Full venue information will be shared with confirmed guests as it's finalised.</p>
+      </div>
+      <div class="events reveal">
+        <article class="event">
+          <h3>Welcome Dinner</h3>
+          <div class="date-block"><time datetime="2027-03-26T19:00">26 March 2027<br>Friday</time></div>
+          <div class="event-time">7:00 PM onwards</div>
+        </article>
+        <article class="event">
+          <h3>Haldi</h3>
+          <div class="date-block"><time datetime="2027-03-27T09:00">27 March 2027<br>Saturday</time></div>
+          <div class="event-time">9:00 AM onwards</div>
+        </article>
+        <article class="event">
+          <h3>Mehendi</h3>
+          <div class="date-block"><time datetime="2027-03-27T11:00">27 March 2027<br>Saturday</time></div>
+          <div class="event-time">11:00 AM onwards</div>
+        </article>
+        <article class="event">
+          <h3>Sangeet</h3>
+          <div class="date-block"><time datetime="2027-03-27T19:00">27 March 2027<br>Saturday</time></div>
+          <div class="event-time">7:00 PM onwards</div>
+        </article>
+        <article class="event">
+          <h3>Wedding Ceremony</h3>
+          <div class="date-block"><time datetime="2027-03-28T19:00">28 March 2027<br>Sunday</time></div>
+          <div class="event-time">7:00 PM onwards</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="details">
+      <div class="section-heading reveal">
+        <p class="section-kicker">Plan your stay</p>
+        <h2>Guest Details</h2>
+      </div>
+      <div class="split">
+        <article class="info-card reveal">
+          <span class="number">01</span>
+          <h3>Travel &amp; Stay</h3>
+          <p>Celebrations take place in Chandigarh, India. Exact venues are still being finalised, along with hotel recommendations and airport transfer options. These will be shared here and directly with guests closer to the date.</p>
+        </article>
+        <article class="info-card reveal">
+          <span class="number">02</span>
+          <h3>Dress Notes</h3>
+          <p>Festive Indian and formal eveningwear are welcome. Individual event palettes and practical notes will follow once venues are confirmed.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="rsvp">
+      <div class="rsvp-panel reveal">
+        <div class="rsvp-intro">
+          <p class="section-kicker">Kindly respond</p>
+          <h2>RSVP</h2>
+          <p class="section-copy">Select your name below and fill in a few details. It updates our guest list directly, so there's nothing further to send.</p>
+        </div>
+
+        <form class="rsvp-form" id="rsvpForm">
+          <div class="form-row">
+            <label for="guestName">Your name</label>
+            <select id="guestName" name="guestName" required>
+              <option value="" disabled selected>Loading guest list…</option>
+            </select>
+            <label class="name-fallback-toggle" style="margin-top:6px; cursor:pointer; opacity:.65; font-size:10px; letter-spacing:.1em; text-transform:none;">
+              <input type="checkbox" id="nameFallbackToggle" style="width:auto; accent-color: var(--gold);" />
+              Can't find your name on the list? Tick this to type it instead.
+            </label>
+            <input type="text" id="guestNameFallback" name="guestNameFallback" placeholder="Type your full name" style="display:none; margin-top:8px;" />
+          </div>
+
+          <div class="form-row">
+            <label for="guestCount">Number of family members attending (including yourself)</label>
+            <input type="number" id="guestCount" name="guestCount" min="1" value="1" required />
+          </div>
+
+          <div class="form-row">
+            <label for="address">Your current address</label>
+            <textarea id="address" name="address" placeholder="So we can send you a physical invitation card" required></textarea>
+          </div>
+
+          <div class="form-row">
+            <label for="arrivalDate">Arrival date in Chandigarh</label>
+            <input type="date" id="arrivalDate" name="arrivalDate" />
+          </div>
+
+          <div class="form-row">
+            <label for="contact">Contact number</label>
+            <input type="text" id="contact" name="contact" placeholder="For last-minute logistics" autocomplete="tel" />
+          </div>
+
+          <div class="form-row">
+            <label for="dietary">Dietary requirements or allergies</label>
+            <p class="section-copy" style="margin:0 0 8px; text-align:left; font-size:12px;">All food served across the festivities will be vegetarian, and no alcohol will be served. Please let us know below about any allergies or other preferences.</p>
+            <textarea id="dietary" name="dietary" placeholder="e.g. nut allergy, no dairy, no onion/garlic"></textarea>
+          </div>
+
+          <div class="form-row">
+            <label for="notes">Song requests or notes for us</label>
+            <textarea id="notes" name="notes" placeholder="Anything you'd like us to know"></textarea>
+          </div>
+
+          <div class="form-footer">
+            <button class="button" type="submit" id="rsvpSubmit">Send RSVP</button>
+            <span class="form-status" id="rsvpStatus" role="status" aria-live="polite"></span>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-names">Vedika &amp; Archit</div>
+    <p>28 March 2027 · Chandigarh, India</p>
+  </footer>
+
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="#home">Home</a>
+    <a href="#festivities">Events</a>
+    <a href="#details">Details</a>
+    <a href="#rsvp">RSVP</a>
+  </nav>
+
+  <script>
+    const header = document.getElementById('header');
+    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 20);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    const target = new Date('2027-03-28T19:00:00+05:30').getTime();
+    const updateCountdown = () => {
+      const distance = Math.max(0, target - Date.now());
+      const day = 86400000, hour = 3600000, minute = 60000;
+      document.getElementById('days').textContent = Math.floor(distance / day);
+      document.getElementById('hours').textContent = String(Math.floor((distance % day) / hour)).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(Math.floor((distance % hour) / minute)).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(Math.floor((distance % minute) / 1000)).padStart(2, '0');
+    };
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    document.getElementById('calendarButton').addEventListener('click', () => {
+      const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Vedika and Archit//Wedding//EN',
+        'BEGIN:VEVENT',
+        'UID:vedika-archit-20270328@wedding',
+        'DTSTAMP:20260728T000000Z',
+        'DTSTART:20270328T133000Z',
+        'DTEND:20270328T183000Z',
+        'SUMMARY:Vedika & Archit — Wedding Ceremony',
+        'LOCATION:Chandigarh, India',
+        'DESCRIPTION:Wedding weekend, Chandigarh, India',
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'vedika-archit-wedding.ics';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    // --- RSVP: reads guest names from, and writes updates to, the Google Sheet ---
+    // Replace this with the URL you get after deploying the Apps Script (see setup notes).
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyG8BK-FJoMEoTU7hcl-gEzeVfZ8sRe9YYwkh_WW31s6TCJVUEF_klD2DnlIBfHC0nP/exec';
+
+    const rsvpForm = document.getElementById('rsvpForm');
+    const rsvpSubmit = document.getElementById('rsvpSubmit');
+    const rsvpStatus = document.getElementById('rsvpStatus');
+    const guestNameSelect = document.getElementById('guestName');
+    const nameFallbackToggle = document.getElementById('nameFallbackToggle');
+    const guestNameFallback = document.getElementById('guestNameFallback');
+
+    nameFallbackToggle.addEventListener('change', () => {
+      const useFallback = nameFallbackToggle.checked;
+      guestNameFallback.style.display = useFallback ? 'block' : 'none';
+      guestNameSelect.required = !useFallback;
+      guestNameFallback.required = useFallback;
+      if (useFallback) guestNameFallback.focus();
+    });
+
+    // Loads the guest list via JSONP (avoids CORS issues with Apps Script GET requests).
+    // Each entry is {name, section, row} — the row number is what we actually submit,
+    // so duplicate names (e.g. two "Nani"s in different families) can't get mixed up.
+    window.populateGuestNames = function (guests) {
+      guestNameSelect.innerHTML = '<option value="" disabled selected>Select your name</option>';
+      const nameCounts = {};
+      guests.forEach(g => { nameCounts[g.name] = (nameCounts[g.name] || 0) + 1; });
+      guests.forEach(g => {
+        const opt = document.createElement('option');
+        opt.value = g.row;
+        opt.dataset.name = g.name;
+        opt.textContent = (nameCounts[g.name] > 1 && g.section) ? `${g.name} (${g.section})` : g.name;
+        guestNameSelect.appendChild(opt);
+      });
+    };
+
+    function loadGuestNames() {
+      if (GOOGLE_SCRIPT_URL.startsWith('PASTE_')) {
+        guestNameSelect.innerHTML = '<option value="" disabled selected>Guest list not connected yet</option>';
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = GOOGLE_SCRIPT_URL + '?callback=populateGuestNames';
+      script.onerror = () => {
+        guestNameSelect.innerHTML = '<option value="" disabled selected>Could not load guest list</option>';
+        nameFallbackToggle.checked = true;
+        nameFallbackToggle.dispatchEvent(new Event('change'));
+      };
+      document.body.appendChild(script);
+    }
+    loadGuestNames();
+
+    rsvpForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const usingFallback = nameFallbackToggle.checked;
+      const selectedOption = guestNameSelect.options[guestNameSelect.selectedIndex];
+      const name = usingFallback ? guestNameFallback.value.trim() : (selectedOption ? selectedOption.dataset.name : '');
+      const row = usingFallback ? null : (guestNameSelect.value || null);
+      const guestCount = document.getElementById('guestCount').value;
+      const address = document.getElementById('address').value.trim();
+      const arrivalDate = document.getElementById('arrivalDate').value;
+      const contact = document.getElementById('contact').value.trim();
+      const dietary = document.getElementById('dietary').value.trim();
+      const notes = document.getElementById('notes').value.trim();
+
+      if (!name) {
+        rsvpStatus.textContent = 'Please select or enter your name.';
+        return;
+      }
+      if (!address) {
+        rsvpStatus.textContent = 'Please add an address so we can send your card.';
+        return;
+      }
+
+      const payload = {
+        name: name,
+        row: row,
+        guests: guestCount,
+        address: address,
+        arrivalDate: arrivalDate,
+        contact: contact,
+        dietary: dietary,
+        notes: notes,
+        submittedAt: new Date().toISOString()
+      };
+
+      rsvpSubmit.disabled = true;
+      rsvpStatus.textContent = 'Sending…';
+
+      if (GOOGLE_SCRIPT_URL.startsWith('PASTE_')) {
+        console.log('RSVP payload (Apps Script URL not configured yet):', payload);
+        rsvpStatus.textContent = 'Thank you. RSVP saving is not fully connected yet, please also confirm by message.';
+        rsvpSubmit.disabled = false;
+        return;
+      }
+
+      try {
+        // text/plain avoids a CORS preflight against Apps Script's redirect-based response.
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        // no-cors means we can't read the response, so we treat the request as sent.
+        rsvpStatus.textContent = 'Thank you, your RSVP has been recorded.';
+        rsvpForm.reset();
+        guestNameFallback.style.display = 'none';
+        loadGuestNames();
+      } catch (err) {
+        console.error(err);
+        rsvpStatus.textContent = 'Something went wrong, please try again or message us directly.';
+        rsvpSubmit.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
