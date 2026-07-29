@@ -954,16 +954,22 @@
     const arrivalDateRow = document.getElementById('arrivalDateRow');
     const arrivalDateSelect = document.getElementById('arrivalDate');
 
-    willAttendSelect.addEventListener('change', () => {
+    // Shared by both the name select and the attending select. The family checklist
+    // shows as soon as a group name is picked (regardless of attendance answer yet) -
+    // guest count / arrival date still wait on "Yes" since those only matter if coming.
+    function updateAttendanceFieldsVisibility() {
       const attending = willAttendSelect.value === 'Yes';
       const selectedOption = guestNameSelect.options[guestNameSelect.selectedIndex];
       const members = selectedOption && selectedOption.dataset.members ? JSON.parse(selectedOption.dataset.members) : [];
       const isGroup = members.length > 1;
       guestCountRow.style.display = (attending && !isGroup) ? 'grid' : 'none';
-      familyChecklistRow.style.display = (attending && isGroup) ? 'grid' : 'none';
+      familyChecklistRow.style.display = isGroup ? 'grid' : 'none';
       arrivalDateRow.style.display = attending ? 'grid' : 'none';
       arrivalDateSelect.required = attending;
-    });
+      if (isGroup) renderFamilyChips(members);
+    }
+
+    willAttendSelect.addEventListener('change', updateAttendanceFieldsVisibility);
 
     // Loads the guest list via JSONP (avoids CORS issues with Apps Script GET requests).
     // Each entry is {name, section, row, members} - members has every person in that
@@ -1008,14 +1014,7 @@
       });
     }
 
-    guestNameSelect.addEventListener('change', () => {
-      const selectedOption = guestNameSelect.options[guestNameSelect.selectedIndex];
-      const members = selectedOption && selectedOption.dataset.members ? JSON.parse(selectedOption.dataset.members) : [];
-      const isGroup = members.length > 1;
-      familyChecklistRow.style.display = isGroup ? 'grid' : 'none';
-      guestCountRow.style.display = isGroup ? 'none' : (willAttendSelect.value === 'Yes' ? 'grid' : 'none');
-      if (isGroup) renderFamilyChips(members);
-    });
+    guestNameSelect.addEventListener('change', updateAttendanceFieldsVisibility);
 
     function loadGuestNames() {
       if (GOOGLE_SCRIPT_URL.startsWith('PASTE_')) {
