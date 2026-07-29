@@ -410,34 +410,6 @@
       border-color: var(--gold);
     }
     .form-row textarea { resize: vertical; min-height: 90px; }
-    .stepper { display: flex; align-items: center; gap: 16px; }
-    .stepper-btn {
-      width: 40px;
-      height: 40px;
-      flex-shrink: 0;
-      border: 1px solid var(--gold-faint);
-      background: rgba(223,178,120,.03);
-      color: var(--gold);
-      font: 400 18px/1 var(--sans);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background .2s ease, color .2s ease, opacity .2s ease;
-    }
-    .stepper-btn:hover:not(:disabled) { background: var(--gold); color: var(--navy); }
-    .stepper-btn:disabled { opacity: .35; cursor: not-allowed; }
-    .stepper input[type="number"] {
-      width: 56px;
-      flex-shrink: 0;
-      text-align: center;
-      -moz-appearance: textfield;
-    }
-    .stepper input[type="number"]::-webkit-inner-spin-button,
-    .stepper input[type="number"]::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
     .family-chips { display: flex; flex-wrap: wrap; gap: 10px; }
     .family-chip {
       display: inline-flex;
@@ -725,15 +697,6 @@
             </select>
           </div>
 
-          <div class="form-row" id="guestCountRow">
-            <label for="guestCount">Number of family members attending (including yourself)</label>
-            <div class="stepper">
-              <button type="button" class="stepper-btn" id="guestCountMinus" aria-label="Decrease">&minus;</button>
-              <input type="number" id="guestCount" name="guestCount" min="1" max="6" value="1" readonly />
-              <button type="button" class="stepper-btn" id="guestCountPlus" aria-label="Increase">+</button>
-            </div>
-          </div>
-
           <div class="form-row" id="familyChecklistRow" style="display:none;">
             <label>Who's coming?</label>
             <p class="section-copy" style="margin:0 0 8px; text-align:left; font-size:12px;">Everyone in your family/group is included by default — remove anyone who isn't coming.</p>
@@ -776,6 +739,7 @@
 
           <div class="form-row">
             <label for="notes">Song requests or notes for us (Optional)</label>
+            <p class="section-copy" style="margin:0 0 8px; text-align:left; font-size:12px;">Bringing someone not listed above? Let us know here, or message us directly.</p>
             <textarea id="notes" name="notes" placeholder="Anything you'd like us to know"></textarea>
           </div>
 
@@ -948,9 +912,10 @@
       if (useFallback) guestNameFallback.focus();
     });
 
-    // Guest count / arrival date only matter if the guest is actually attending.
+    // Arrival date only matters if the guest is actually attending. Solo guests don't
+    // get a guest-count control at all - if they're bringing someone not listed, they
+    // mention it in the notes or message us directly.
     const willAttendSelect = document.getElementById('willAttend');
-    const guestCountRow = document.getElementById('guestCountRow');
     const arrivalDateRow = document.getElementById('arrivalDateRow');
     const arrivalDateSelect = document.getElementById('arrivalDate');
 
@@ -958,8 +923,8 @@
     const willAttendNoOpt = document.getElementById('willAttendNoOpt');
 
     // Shared by both the name select and the attending select. Family checklist only
-    // shows once "Yes" is confirmed - same as the solo guest-count stepper - since
-    // asking "who's coming" before "are you coming at all" is answered is premature.
+    // shows once "Yes" is confirmed, since asking "who's coming" before "are you
+    // coming at all" is answered is premature.
     function updateAttendanceFieldsVisibility() {
       const willAttend = willAttendSelect.value;
       const attending = willAttend === 'Yes';
@@ -970,7 +935,6 @@
       willAttendYesOpt.textContent = isGroup ? "Yes, we'll be there" : "Yes, I'll be there";
       willAttendNoOpt.textContent = isGroup ? "No, we can't make it" : "No, I can't make it";
 
-      guestCountRow.style.display = (attending && !isGroup) ? 'grid' : 'none';
       familyChecklistRow.style.display = (attending && isGroup) ? 'grid' : 'none';
       arrivalDateRow.style.display = attending ? 'grid' : 'none';
       arrivalDateSelect.required = attending;
@@ -1051,26 +1015,6 @@
     }
     loadGuestNames();
 
-    const guestCountInput = document.getElementById('guestCount');
-    const guestCountMinus = document.getElementById('guestCountMinus');
-    const guestCountPlus = document.getElementById('guestCountPlus');
-    const GUEST_COUNT_MAX = 6;
-
-    function updateGuestCountButtons() {
-      const val = parseInt(guestCountInput.value, 10);
-      guestCountMinus.disabled = val <= 1;
-      guestCountPlus.disabled = val >= GUEST_COUNT_MAX;
-    }
-    guestCountMinus.addEventListener('click', () => {
-      guestCountInput.value = Math.max(1, parseInt(guestCountInput.value, 10) - 1);
-      updateGuestCountButtons();
-    });
-    guestCountPlus.addEventListener('click', () => {
-      guestCountInput.value = Math.min(GUEST_COUNT_MAX, parseInt(guestCountInput.value, 10) + 1);
-      updateGuestCountButtons();
-    });
-    updateGuestCountButtons();
-
     rsvpForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -1085,7 +1029,7 @@
       // from a previous selection) - everyone in the group is simply not attending.
       const attendingRows = isGroup ? (willAttend === 'No' ? [] : currentMembers.filter(m => m.included).map(m => m.row)) : null;
       const notAttendingRows = isGroup ? (willAttend === 'No' ? selectedMembers.map(m => m.row) : currentMembers.filter(m => !m.included).map(m => m.row)) : null;
-      const guestCount = isGroup ? (attendingRows ? attendingRows.length : 0) : document.getElementById('guestCount').value;
+      const guestCount = isGroup ? (attendingRows ? attendingRows.length : 0) : 1;
       const address = document.getElementById('address').value.trim();
       const arrivalDate = document.getElementById('arrivalDate').value;
       const contact = document.getElementById('contact').value.trim();
