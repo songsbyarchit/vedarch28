@@ -719,8 +719,8 @@
             <label for="willAttend">Will you be attending?</label>
             <select id="willAttend" name="willAttend" required>
               <option value="" disabled selected>Select an option</option>
-              <option value="Yes">Yes, I'll be there</option>
-              <option value="No">No, I can't make it</option>
+              <option value="Yes" id="willAttendYesOpt">Yes, I'll be there</option>
+              <option value="No" id="willAttendNoOpt">No, I can't make it</option>
               <option value="Not sure yet">Not sure yet</option>
             </select>
           </div>
@@ -954,19 +954,28 @@
     const arrivalDateRow = document.getElementById('arrivalDateRow');
     const arrivalDateSelect = document.getElementById('arrivalDate');
 
+    const willAttendYesOpt = document.getElementById('willAttendYesOpt');
+    const willAttendNoOpt = document.getElementById('willAttendNoOpt');
+
     // Shared by both the name select and the attending select. The family checklist
-    // shows as soon as a group name is picked (regardless of attendance answer yet) -
-    // guest count / arrival date still wait on "Yes" since those only matter if coming.
+    // shows as soon as a group name is picked, but disappears again if they say "No" -
+    // no point showing who's coming when nobody in the group is. Guest count / arrival
+    // date still wait on "Yes" since those only matter if coming.
     function updateAttendanceFieldsVisibility() {
-      const attending = willAttendSelect.value === 'Yes';
+      const willAttend = willAttendSelect.value;
+      const attending = willAttend === 'Yes';
       const selectedOption = guestNameSelect.options[guestNameSelect.selectedIndex];
       const members = selectedOption && selectedOption.dataset.members ? JSON.parse(selectedOption.dataset.members) : [];
       const isGroup = members.length > 1;
+
+      willAttendYesOpt.textContent = isGroup ? "Yes, we'll be there" : "Yes, I'll be there";
+      willAttendNoOpt.textContent = isGroup ? "No, we can't make it" : "No, I can't make it";
+
       guestCountRow.style.display = (attending && !isGroup) ? 'grid' : 'none';
-      familyChecklistRow.style.display = isGroup ? 'grid' : 'none';
+      familyChecklistRow.style.display = (isGroup && willAttend !== 'No') ? 'grid' : 'none';
       arrivalDateRow.style.display = attending ? 'grid' : 'none';
       arrivalDateSelect.required = attending;
-      if (isGroup) renderFamilyChips(members);
+      if (isGroup && willAttend !== 'No') renderFamilyChips(members);
     }
 
     willAttendSelect.addEventListener('change', updateAttendanceFieldsVisibility);
@@ -979,12 +988,15 @@
     const familyChips = document.getElementById('familyChips');
     let currentMembers = [];
 
+    // Sort key ignores a leading "The " so "The Gaur Family" alphabetizes under G, not T.
+      const sortWord = str => str.replace(/^the\s+/i, '').split(' ')[0];
+
     window.populateGuestNames = function (guests) {
       guestNameSelect.innerHTML = '<option value="" disabled selected>Select your name</option>';
       const nameCounts = {};
       guests.forEach(g => { nameCounts[g.name] = (nameCounts[g.name] || 0) + 1; });
       const sorted = [...guests].sort((a, b) =>
-        a.name.split(' ')[0].localeCompare(b.name.split(' ')[0], undefined, { sensitivity: 'base' })
+        sortWord(a.familyLabel || a.name).localeCompare(sortWord(b.familyLabel || b.name), undefined, { sensitivity: 'base' })
       );
       sorted.forEach(g => {
         const opt = document.createElement('option');
@@ -993,7 +1005,7 @@
         opt.dataset.members = JSON.stringify(g.members || [{ name: g.name, row: g.row }]);
         const isGroup = (g.members || []).length > 1;
         const label = (nameCounts[g.name] > 1 && g.section) ? `${g.name} (${g.section})` : g.name;
-        opt.textContent = isGroup ? `${label} + family` : label;
+        opt.textContent = isGroup ? (g.familyLabel || `${label} + family`) : label;
         guestNameSelect.appendChild(opt);
       });
     };
@@ -1061,9 +1073,11 @@
       const isGroup = selectedMembers.length > 1;
       const name = usingFallback ? guestNameFallback.value.trim() : (selectedOption ? selectedOption.dataset.name : '');
       const row = (usingFallback || isGroup) ? null : (guestNameSelect.value || null);
-      const attendingRows = isGroup ? currentMembers.filter(m => m.included).map(m => m.row) : null;
-      const notAttendingRows = isGroup ? currentMembers.filter(m => !m.included).map(m => m.row) : null;
       const willAttend = willAttendSelect.value;
+      // If they said "No", the checklist never rendered (currentMembers could be stale
+      // from a previous selection) - everyone in the group is simply not attending.
+      const attendingRows = isGroup ? (willAttend === 'No' ? [] : currentMembers.filter(m => m.included).map(m => m.row)) : null;
+      const notAttendingRows = isGroup ? (willAttend === 'No' ? selectedMembers.map(m => m.row) : currentMembers.filter(m => !m.included).map(m => m.row)) : null;
       const guestCount = isGroup ? (attendingRows ? attendingRows.length : 0) : document.getElementById('guestCount').value;
       const address = document.getElementById('address').value.trim();
       const arrivalDate = document.getElementById('arrivalDate').value;
