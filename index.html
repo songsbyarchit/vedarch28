@@ -997,12 +997,20 @@
       const sorted = [...guests].sort((a, b) =>
         sortWord(a.familyLabel || a.name).localeCompare(sortWord(b.familyLabel || b.name), undefined, { sensitivity: 'base' })
       );
+      // Every member of a group shares the same familyLabel, which would otherwise show
+      // as several identical-looking repeated options - only show each group once, but
+      // the underlying `members` list (and so the checklist) still covers everyone.
+      const seenFamilyLabels = new Set();
       sorted.forEach(g => {
+        const isGroup = (g.members || []).length > 1;
+        if (isGroup && g.familyLabel) {
+          if (seenFamilyLabels.has(g.familyLabel)) return;
+          seenFamilyLabels.add(g.familyLabel);
+        }
         const opt = document.createElement('option');
         opt.value = g.row;
         opt.dataset.name = g.name;
         opt.dataset.members = JSON.stringify(g.members || [{ name: g.name, row: g.row }]);
-        const isGroup = (g.members || []).length > 1;
         const label = (nameCounts[g.name] > 1 && g.section) ? `${g.name} (${g.section})` : g.name;
         opt.textContent = isGroup ? (g.familyLabel || `${label} + family`) : label;
         guestNameSelect.appendChild(opt);
