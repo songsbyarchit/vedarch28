@@ -557,8 +557,8 @@
           <div class="hero-actions">
             <a class="button primary" href="#rsvp">RSVP</a>
           </div>
-          <svg class="shell-mark" viewBox="0 0 240 100" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true">
-            <g transform="translate(90,48) scale(0.8) rotate(-14) translate(-100,-32) rotate(180,100,32)">
+          <svg class="shell-mark" viewBox="0 0 240 110" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" aria-hidden="true">
+            <g transform="translate(78,55) scale(0.95) translate(-100,-32) rotate(180,100,32)">
               <path d="M100 10 C 80 15, 64 24, 56 50 C 60 55, 66 56, 70 51 C 73 56, 79 57, 83 51 C 86 56, 92 57, 95.5 51 C 97 54, 99 55, 100.5 51 C 100.6 34, 100.3 20, 100 10 Z"/>
               <path d="M100 10 Q 78 30, 56 50"/>
               <path d="M100 10 Q 84 31, 70 51"/>
@@ -570,7 +570,7 @@
               <path d="M100 10 Q 109 32, 118 52"/>
               <path d="M100 10 Q 103 32, 105.5 52"/>
             </g>
-            <g transform="translate(150,48) scale(0.8) rotate(14) translate(-100,-32) rotate(180,100,32)">
+            <g transform="translate(162,55) scale(-0.95,0.95) translate(-100,-32) rotate(180,100,32)">
               <path d="M100 10 C 80 15, 64 24, 56 50 C 60 55, 66 56, 70 51 C 73 56, 79 57, 83 51 C 86 56, 92 57, 95.5 51 C 97 54, 99 55, 100.5 51 C 100.6 34, 100.3 20, 100 10 Z"/>
               <path d="M100 10 Q 78 30, 56 50"/>
               <path d="M100 10 Q 84 31, 70 51"/>
@@ -674,10 +674,20 @@
           </div>
 
           <div class="form-row">
+            <label for="willAttend">Will you be attending?</label>
+            <select id="willAttend" name="willAttend" required>
+              <option value="" disabled selected>Select an option</option>
+              <option value="Yes">Yes, I'll be there</option>
+              <option value="No">No, I can't make it</option>
+              <option value="Not sure yet">Not sure yet</option>
+            </select>
+          </div>
+
+          <div class="form-row" id="guestCountRow">
             <label for="guestCount">Number of family members attending (including yourself)</label>
             <div class="stepper">
               <button type="button" class="stepper-btn" id="guestCountMinus" aria-label="Decrease">&minus;</button>
-              <input type="number" id="guestCount" name="guestCount" min="1" max="6" value="1" required readonly />
+              <input type="number" id="guestCount" name="guestCount" min="1" max="6" value="1" readonly />
               <button type="button" class="stepper-btn" id="guestCountPlus" aria-label="Increase">+</button>
             </div>
           </div>
