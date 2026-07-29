@@ -637,6 +637,12 @@
           </div>
 
           <div class="form-row">
+            <label for="email">Email address</label>
+            <p class="section-copy" style="margin:0 0 8px; text-align:left; font-size:12px;">We'll send calendar invites for the festivities you're attending.</p>
+            <input type="email" id="email" name="email" placeholder="So we can send you calendar invites" autocomplete="email" required />
+          </div>
+
+          <div class="form-row">
             <label for="dietary">Dietary requirements or allergies</label>
             <p class="section-copy" style="margin:0 0 8px; text-align:left; font-size:12px;">All food served across the festivities will be vegetarian, and no alcohol will be served. Please let us know below about any allergies or other preferences.</p>
             <textarea id="dietary" name="dietary" placeholder="e.g. nut allergy, no dairy, no onion/garlic"></textarea>
@@ -800,6 +806,7 @@
       const address = document.getElementById('address').value.trim();
       const arrivalDate = document.getElementById('arrivalDate').value;
       const contact = document.getElementById('contact').value.trim();
+      const email = document.getElementById('email').value.trim();
       const dietary = document.getElementById('dietary').value.trim();
       const notes = document.getElementById('notes').value.trim();
 
@@ -811,6 +818,10 @@
         rsvpStatus.textContent = 'Please add an address so we can send your card.';
         return;
       }
+      if (!email) {
+        rsvpStatus.textContent = 'Please add an email so we can send your calendar invites.';
+        return;
+      }
 
       const payload = {
         name: name,
@@ -819,6 +830,7 @@
         address: address,
         arrivalDate: arrivalDate,
         contact: contact,
+        email: email,
         dietary: dietary,
         notes: notes,
         submittedAt: new Date().toISOString()
