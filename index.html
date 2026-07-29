@@ -233,12 +233,6 @@
       .rsvp-fab { right: 16px; bottom: 88px; }
     }
 
-    .ornament { position: absolute; pointer-events: none; color: var(--gold); }
-    .ornament svg { display: block; width: 100%; height: 100%; overflow: visible; }
-    .ornament.top-left { width: clamp(140px, 24vw, 250px); height: 250px; top: 10px; left: 10px; }
-    .ornament.top-right { width: clamp(140px, 24vw, 250px); height: 250px; top: 10px; right: 10px; transform: scaleX(-1); }
-    .ornament.bottom-left { width: clamp(120px, 20vw, 215px); height: 215px; bottom: 8px; left: 8px; transform: scaleY(-1); }
-    .ornament.bottom-right { width: clamp(120px, 20vw, 215px); height: 215px; bottom: 8px; right: 8px; transform: scale(-1); }
     .shell-mark { width: 110px; margin: 55px auto 0; }
 
     .section-heading { text-align: center; margin: 0 auto 56px; max-width: 720px; }
@@ -474,8 +468,6 @@
       .mobile-nav { display: grid; grid-template-columns: repeat(4, 1fr); }
       .hero { min-height: 66svh; padding: 48px 12px 16px; }
       .hero-frame { min-height: calc(66svh - 64px); padding: 56px 18px 24px; }
-      .ornament.top-left, .ornament.top-right { width: 105px; height: 120px; }
-      .ornament.bottom-left, .ornament.bottom-right { width: 85px; height: 95px; }
       h1 { font-size: clamp(40px, 13vw, 64px); line-height: .84; }
       .hero-meta { margin-top: 28px; }
       .hero-actions { margin-top: 20px; }
@@ -521,27 +513,6 @@
   <main>
     <section class="hero" id="home" aria-labelledby="hero-title">
       <div class="hero-frame">
-        <div class="ornament top-left" aria-hidden="true">
-          <svg viewBox="0 0 250 250" fill="none" stroke="currentColor" stroke-width="1.25">
-            <path d="M12 224C47 163 55 94 92 28M23 181c35-16 61-12 81 4-31 17-59 15-81-4ZM47 136c22-29 49-39 80-27-24 26-51 35-80 27ZM70 89c11-32 30-51 58-63-9 34-29 55-58 63ZM88 60c31 3 58-4 83-24-37-8-64 0-83 24Z"/>
-            <path d="M37 175c-8-20-8-39 1-58 15 21 14 40-1 58ZM55 121c-6-19-3-36 10-51 10 22 7 39-10 51Z"/>
-            <circle cx="48" cy="101" r="3"/><circle cx="60" cy="89" r="3"/><circle cx="72" cy="77" r="3"/>
-          </svg>
-        </div>
-        <div class="ornament top-right" aria-hidden="true">
-          <svg viewBox="0 0 250 250" fill="none" stroke="currentColor" stroke-width="1.25">
-            <path d="M12 224C47 163 55 94 92 28M23 181c35-16 61-12 81 4-31 17-59 15-81-4ZM47 136c22-29 49-39 80-27-24 26-51 35-80 27ZM70 89c11-32 30-51 58-63-9 34-29 55-58 63ZM88 60c31 3 58-4 83-24-37-8-64 0-83 24Z"/>
-            <path d="M37 175c-8-20-8-39 1-58 15 21 14 40-1 58ZM55 121c-6-19-3-36 10-51 10 22 7 39-10 51Z"/>
-            <circle cx="48" cy="101" r="3"/><circle cx="60" cy="89" r="3"/><circle cx="72" cy="77" r="3"/>
-          </svg>
-        </div>
-        <div class="ornament bottom-left" aria-hidden="true">
-          <svg viewBox="0 0 250 250" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M12 224C47 163 55 94 92 28M23 181c35-16 61-12 81 4-31 17-59 15-81-4ZM47 136c22-29 49-39 80-27-24 26-51 35-80 27Z"/><circle cx="48" cy="101" r="3"/><circle cx="60" cy="89" r="3"/></svg>
-        </div>
-        <div class="ornament bottom-right" aria-hidden="true">
-          <svg viewBox="0 0 250 250" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M12 224C47 163 55 94 92 28M23 181c35-16 61-12 81 4-31 17-59 15-81-4ZM47 136c22-29 49-39 80-27-24 26-51 35-80 27Z"/><circle cx="48" cy="101" r="3"/><circle cx="60" cy="89" r="3"/></svg>
-        </div>
-
         <div class="hero-inner">
           <p class="eyebrow">Save the date</p>
           <div class="rule"></div>
