@@ -1047,10 +1047,18 @@
       guestNameSelect.dispatchEvent(new Event('change'));
     }
 
+    function guestOptionMatches(option, q) {
+      if (option.textContent.toLowerCase().includes(q)) return true;
+      // A family/couple option is labelled with just the family name (e.g. "Gaur Family"),
+      // but searching any individual member's name (e.g. "Aanya") should still surface it.
+      const members = option.dataset.members ? JSON.parse(option.dataset.members) : [];
+      return members.some(m => m.name.toLowerCase().includes(q));
+    }
+
     function renderGuestNameList(query) {
       const q = query.trim().toLowerCase();
       guestNameMatches = q
-        ? Array.from(guestNameSelect.options).filter(o => o.value && o.textContent.toLowerCase().includes(q)).slice(0, 8)
+        ? Array.from(guestNameSelect.options).filter(o => o.value && guestOptionMatches(o, q)).slice(0, 8)
         : [];
 
       guestNameList.innerHTML = '';
