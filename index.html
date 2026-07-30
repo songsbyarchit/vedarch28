@@ -410,6 +410,39 @@
       border-color: var(--gold);
     }
     .form-row textarea { resize: vertical; min-height: 90px; }
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .autocomplete { position: relative; }
+    .autocomplete-list {
+      list-style: none;
+      margin: 4px 0 0;
+      padding: 0;
+      position: absolute;
+      z-index: 20;
+      top: 100%;
+      left: 0;
+      right: 0;
+      max-height: 220px;
+      overflow-y: auto;
+      background: var(--navy);
+      border: 1px solid var(--gold-faint);
+      box-shadow: 0 14px 30px rgba(0,0,0,.35);
+    }
+    .autocomplete-item {
+      padding: 12px 16px;
+      font: 300 14px/1.4 var(--sans);
+      color: var(--gold);
+      cursor: pointer;
+    }
+    .autocomplete-item.active,
+    .autocomplete-item:hover { background: rgba(223,178,120,.12); }
     .family-chips { display: flex; flex-wrap: wrap; gap: 10px; }
     .family-chip {
       display: inline-flex;
@@ -677,8 +710,12 @@
 
         <form class="rsvp-form" id="rsvpForm">
           <div class="form-row">
-            <label for="guestName">Your name</label>
-            <select id="guestName" name="guestName" required>
+            <label for="guestNameSearch">Your name</label>
+            <div class="autocomplete" id="guestNameAutocomplete">
+              <input type="text" id="guestNameSearch" autocomplete="off" placeholder="Start typing your name…" required />
+              <ul class="autocomplete-list" id="guestNameList" role="listbox" hidden></ul>
+            </div>
+            <select id="guestName" name="guestName" class="visually-hidden" tabindex="-1" aria-hidden="true">
               <option value="" disabled selected>Loading guest list…</option>
             </select>
             <label class="name-fallback-toggle" style="margin-top:6px; cursor:pointer; opacity:.65; font-size:10px; letter-spacing:.1em; text-transform:none;">
@@ -904,13 +941,21 @@
     const guestNameSelect = document.getElementById('guestName');
     const nameFallbackToggle = document.getElementById('nameFallbackToggle');
     const guestNameFallback = document.getElementById('guestNameFallback');
+    const guestNameSearch = document.getElementById('guestNameSearch');
+    const guestNameList = document.getElementById('guestNameList');
+    const guestNameAutocomplete = document.getElementById('guestNameAutocomplete');
 
     nameFallbackToggle.addEventListener('change', () => {
       const useFallback = nameFallbackToggle.checked;
       guestNameFallback.style.display = useFallback ? 'block' : 'none';
-      guestNameSelect.required = !useFallback;
+      guestNameAutocomplete.style.display = useFallback ? 'none' : 'block';
+      guestNameSearch.required = !useFallback;
       guestNameFallback.required = useFallback;
-      if (useFallback) guestNameFallback.focus();
+      if (useFallback) {
+        guestNameFallback.focus();
+      } else {
+        guestNameSearch.focus();
+      }
     });
 
     // Arrival date only matters if the guest is actually attending. Solo guests don't
@@ -981,6 +1026,79 @@
         guestNameSelect.appendChild(opt);
       });
     };
+
+    // Autocomplete over the hidden <select>'s options - keeps the select as the single
+    // source of truth (dedup/sort/dataset already handled by populateGuestNames above),
+    // so submit/checklist logic downstream doesn't need to know a search box exists.
+    let guestNameMatches = [];
+    let guestNameActiveIndex = -1;
+
+    function closeGuestNameList() {
+      guestNameList.hidden = true;
+      guestNameList.innerHTML = '';
+      guestNameMatches = [];
+      guestNameActiveIndex = -1;
+    }
+
+    function chooseGuestOption(option) {
+      guestNameSelect.value = option.value;
+      guestNameSearch.value = option.textContent;
+      closeGuestNameList();
+      guestNameSelect.dispatchEvent(new Event('change'));
+    }
+
+    function renderGuestNameList(query) {
+      const q = query.trim().toLowerCase();
+      guestNameMatches = q
+        ? Array.from(guestNameSelect.options).filter(o => o.value && o.textContent.toLowerCase().includes(q)).slice(0, 8)
+        : [];
+
+      guestNameList.innerHTML = '';
+      guestNameActiveIndex = -1;
+      if (guestNameMatches.length === 0) { guestNameList.hidden = true; return; }
+
+      guestNameMatches.forEach(o => {
+        const li = document.createElement('li');
+        li.className = 'autocomplete-item';
+        li.textContent = o.textContent;
+        li.setAttribute('role', 'option');
+        li.addEventListener('mousedown', e => { e.preventDefault(); chooseGuestOption(o); });
+        guestNameList.appendChild(li);
+      });
+      guestNameList.hidden = false;
+    }
+
+    guestNameSearch.addEventListener('input', () => {
+      // Typing again invalidates whatever was previously locked in.
+      guestNameSelect.value = '';
+      updateAttendanceFieldsVisibility();
+      renderGuestNameList(guestNameSearch.value);
+    });
+
+    guestNameSearch.addEventListener('keydown', e => {
+      if (guestNameList.hidden || guestNameMatches.length === 0) return;
+      const items = Array.from(guestNameList.children);
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        guestNameActiveIndex = (guestNameActiveIndex + 1) % items.length;
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        guestNameActiveIndex = (guestNameActiveIndex - 1 + items.length) % items.length;
+      } else if (e.key === 'Enter') {
+        if (guestNameActiveIndex >= 0) { e.preventDefault(); chooseGuestOption(guestNameMatches[guestNameActiveIndex]); }
+        return;
+      } else if (e.key === 'Escape') {
+        closeGuestNameList();
+        return;
+      } else {
+        return;
+      }
+      items.forEach((li, i) => li.classList.toggle('active', i === guestNameActiveIndex));
+      items[guestNameActiveIndex].scrollIntoView({ block: 'nearest' });
+    });
+
+    guestNameSearch.addEventListener('blur', () => setTimeout(closeGuestNameList, 100));
+    guestNameSearch.addEventListener('focus', () => { if (guestNameSearch.value) renderGuestNameList(guestNameSearch.value); });
 
     function renderFamilyChips(members) {
       currentMembers = members.map(m => ({ ...m, included: true }));
