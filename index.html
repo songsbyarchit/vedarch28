@@ -575,6 +575,15 @@
       *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
       .reveal { opacity: 1; transform: none; }
     }
+
+    /* mobile readability polish */
+    @media (max-width: 760px) {
+      .rsvp-fab { top: calc(13px + env(safe-area-inset-top)); bottom: auto; right: 14px; padding: 11px 20px; box-shadow: none; }
+      .mobile-nav a { font-size: 10px; letter-spacing: .12em; }
+      .info-card p { font-size: 14px; color: rgba(223,178,120,.9); }
+      .event h3, .event time, .event .event-time { font-size: 12px; }
+      .event .event-time { opacity: .88; }
+    }
   </style>
 </head>
 <body>
@@ -648,6 +657,7 @@
         <p class="section-kicker">The details</p>
         <h2>Wedding Festivities</h2>
         <p class="section-copy">Four days of colour, food and celebration in Chandigarh. Full venue information will be shared with confirmed guests as it's finalised.</p>
+        <p class="section-copy">Indian Standard Time - not Indian Stretchable Time. We'll start sharp at the times listed, so arrive a little early or risk missing the fun.</p>
       </div>
       <div class="events reveal">
         <article class="event">
@@ -687,12 +697,18 @@
         <article class="info-card reveal">
           <span class="number">01</span>
           <h3>Travel &amp; Stay</h3>
-          <p>Celebrations take place in Chandigarh, India. Exact venues are still being finalised, along with hotel recommendations and airport transfer options. These will be shared here and directly with guests closer to the date.</p>
+          <p>Celebrations take place at Velvet Clarks Exotica, Zirakpur, Chandigarh. Rooms are booked for every guest for the Friday, Saturday and Sunday nights (26 to 28 March). Airport transfer options and further details will be shared here and directly with guests closer to the date.</p>
         </article>
         <article class="info-card reveal">
           <span class="number">02</span>
           <h3>Dress Notes</h3>
           <p>Festive Indian and formal eveningwear are welcome. Individual event palettes and practical notes will follow once venues are confirmed.</p>
+        </article>
+        <article class="info-card reveal" style="grid-column: 1 / -1; padding-top: 112px;">
+          <span class="number">03</span>
+          <h3>Travelling to India?</h3>
+          <p>Visa requirements depend on your passport and circumstances. Check your eligibility and apply through the official Indian government website. Allow plenty of time before travelling and check the passport requirements before applying.</p>
+          <p><a href="https://indianvisaonline.gov.in/evisa/tvoa.html" target="_blank" rel="noopener" style="color:inherit; text-decoration:underline;">indianvisaonline.gov.in/evisa</a></p>
         </article>
       </div>
     </section>
@@ -704,8 +720,7 @@
           <p class="section-kicker">Kindly respond</p>
           <h2>RSVP</h2>
           <p class="section-copy">Select your name below and fill in a few details. It updates our guest list directly, so there's nothing further to send.</p>
-          <p class="section-copy">Prefer to talk, or have anything else you'd rather discuss privately? Call or message us directly - Vedika on +44 7565 804116, or Archit on +44 7925 218447.</p>
-          <p class="section-copy">We're happy to help with recommendations for flights and transport to the venue - do get in touch if that would be useful.</p>
+          <p class="section-copy">Prefer to talk, want to discuss anything privately, or need flight and transport help? Call or message us directly - Vedika on +44 7565 804116, or Archit on +44 7925 218447.</p>
         </div>
 
         <form class="rsvp-form" id="rsvpForm">
