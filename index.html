@@ -578,7 +578,7 @@
 
     /* mobile readability polish */
     @media (max-width: 760px) {
-      .rsvp-fab { display: none; }
+      .rsvp-fab { top: calc(13px + env(safe-area-inset-top)); bottom: auto; right: 14px; padding: 11px 20px; box-shadow: none; }
       .mobile-nav a { font-size: 10px; letter-spacing: .12em; }
       .info-card p { font-size: 14px; color: rgba(223,178,120,.9); }
       .event h3, .event time, .event .event-time { font-size: 12px; }
