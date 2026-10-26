@@ -575,6 +575,15 @@
       *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
       .reveal { opacity: 1; transform: none; }
     }
+
+    /* mobile readability polish */
+    @media (max-width: 760px) {
+      .rsvp-fab { display: none; }
+      .mobile-nav a { font-size: 10px; letter-spacing: .12em; }
+      .info-card p { font-size: 14px; color: rgba(223,178,120,.9); }
+      .event h3, .event time, .event .event-time { font-size: 12px; }
+      .event .event-time { opacity: .88; }
+    }
   </style>
 </head>
 <body>
@@ -710,8 +719,7 @@
           <p class="section-kicker">Kindly respond</p>
           <h2>RSVP</h2>
           <p class="section-copy">Select your name below and fill in a few details. It updates our guest list directly, so there's nothing further to send.</p>
-          <p class="section-copy">Prefer to talk, or have anything else you'd rather discuss privately? Call or message us directly - Vedika on +44 7565 804116, or Archit on +44 7925 218447.</p>
-          <p class="section-copy">We're happy to help with recommendations for flights and transport to the venue - do get in touch if that would be useful.</p>
+          <p class="section-copy">Prefer to talk, want to discuss anything privately, or need flight and transport help? Call or message us directly - Vedika on +44 7565 804116, or Archit on +44 7925 218447.</p>
         </div>
 
         <form class="rsvp-form" id="rsvpForm">
