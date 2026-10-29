@@ -651,6 +651,33 @@
       .hero-meta time, .hero-meta span { font-size: 10px; letter-spacing: .18em; }
     }
 
+
+    /* Make the event date and location the leading detail, without a repeated
+       Save-the-date label or top divider. Scoped to the hero only. */
+    .hero-meta time, .hero-meta span { font-size: clamp(16px, 2vw, 20px); letter-spacing: .2em; }
+    @media (max-width: 760px) {
+      .hero-meta { flex-direction: column; gap: 8px; }
+      .hero-meta time, .hero-meta span { font-size: clamp(15px, 4.1vw, 18px); letter-spacing: .18em; }
+    }
+    /* Hero portrait revision: full-width face crop, no photo frame, soft navy fade.
+       Keep the RSVP control before the portrait in the document and visual flow. */
+    .hero-photo {
+      width: min(600px, 100%);
+      height: 400px;
+      margin: 10px auto 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 84%, transparent 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, #000 18%, #000 84%, transparent 100%);
+    }
+    .hero-photo img {
+      width: 100%; height: 100%; object-fit: cover; object-position: 50% 0%; border: 0;
+    }
+    @media (max-width: 760px) {
+      .hero-photo { width: calc(100% + 16px); max-width: none; height: 300px; margin-left: -8px; margin-top: 4px; }
+      .hero-photo img { object-position: 50% 12%; }
+    }
   </style>
 </head>
 <body>
@@ -673,8 +700,6 @@
         <img class="corner bl" src="assets/branch-b.png" alt="" aria-hidden="true">
         <img class="corner br" src="assets/branch-b.png" alt="" aria-hidden="true">
         <div class="hero-inner">
-          <p class="eyebrow">Save the date</p>
-          <div class="rule"></div>
           <h1 id="hero-title">Vedika <span class="amp">&amp;</span> Archit</h1>
           <div class="hero-meta">
             <time datetime="2027-03-28">28 March 2027</time>
@@ -1351,4 +1376,3 @@
   </script>
 </body>
 </html>
-
