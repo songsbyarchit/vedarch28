@@ -1081,6 +1081,7 @@
       guestNameAutocomplete.style.display = useFallback ? 'none' : 'block';
       guestNameSearch.required = !useFallback;
       guestNameFallback.required = useFallback;
+      rsvpSubmit.textContent = 'Send RSVP';
       if (useFallback) {
         guestNameFallback.focus();
       } else {
@@ -1209,6 +1210,7 @@
     guestNameSearch.addEventListener('input', () => {
       // Typing again invalidates whatever was previously locked in.
       guestNameSelect.value = '';
+      rsvpSubmit.textContent = 'Send RSVP';
       updateAttendanceFieldsVisibility();
       renderGuestNameList(guestNameSearch.value);
     });
@@ -1239,12 +1241,15 @@
     guestNameSearch.addEventListener('focus', () => { if (guestNameSearch.value) renderGuestNameList(guestNameSearch.value); });
 
     function renderFamilyChips(members) {
-      currentMembers = members.map(m => ({ ...m, included: true }));
+      // 31 Oct: pre-fill from the stored RSVP - a previous "No" member starts crossed
+      // out and a previous "Yes" member starts included, exactly where they left it.
+      // Blank/"Undecided" members start included, same as a fresh RSVP always did.
+      currentMembers = members.map(m => ({ ...m, included: (m.rsvp || '').trim().toLowerCase() !== 'no' }));
       familyChips.innerHTML = '';
       currentMembers.forEach((m, idx) => {
         const chip = document.createElement('span');
-        chip.className = 'family-chip';
-        chip.innerHTML = `<span class="chip-label">${m.name}</span> <button type="button" aria-label="Remove ${m.name}">&times;</button>`;
+        chip.className = 'family-chip' + (m.included ? '' : ' removed');
+        chip.innerHTML = `<span class="chip-label">${m.name}</span> <button type="button" aria-label="Remove ${m.name}">${m.included ? '&times;' : '&#43;'}</button>`;
         chip.querySelector('button').addEventListener('click', () => {
           currentMembers[idx].included = !currentMembers[idx].included;
           chip.classList.toggle('removed', !currentMembers[idx].included);
@@ -1254,7 +1259,24 @@
       });
     }
 
-    guestNameSelect.addEventListener('change', updateAttendanceFieldsVisibility);
+    // 31 Oct: if anyone in the selected group already has a stored Yes/No, this visit
+    // is an edit, not a new RSVP - pre-fill their last answer and say so on the button.
+    function applyPreviousResponse() {
+      const selectedOption = guestNameSelect.options[guestNameSelect.selectedIndex];
+      const members = selectedOption && selectedOption.dataset.members ? JSON.parse(selectedOption.dataset.members) : [];
+      const answered = members.filter(m => ['yes', 'no'].includes((m.rsvp || '').trim().toLowerCase()));
+      const isEdit = answered.length > 0;
+      rsvpSubmit.textContent = isEdit ? 'Edit RSVP' : 'Send RSVP';
+      if (isEdit) {
+        const anyYes = answered.some(m => (m.rsvp || '').trim().toLowerCase() === 'yes');
+        willAttendSelect.value = anyYes ? 'Yes' : 'No';
+      } else {
+        // Fresh guest (blank or "Undecided") - start the form clean for them.
+        willAttendSelect.value = '';
+      }
+    }
+
+    guestNameSelect.addEventListener('change', () => { applyPreviousResponse(); updateAttendanceFieldsVisibility(); });
 
     function loadGuestNames() {
       if (GOOGLE_SCRIPT_URL.startsWith('PASTE_')) {
